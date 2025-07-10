@@ -1,6 +1,3 @@
-// servidor.c (Versão Final com Logs de Erro Aprimorados)
-// Compilar com: gcc servidor.c -o servidor -lpthread
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,13 +12,11 @@
 #define MAX_BUFFER_SIZE 8192
 #define MAX_CONEXOES 20
 
-// Códigos de status e erro
 #define SUCESSO 0
 #define ERRO_MEMORIA_INEXISTENTE -2
 #define ERRO_COMANDO_DESCONHECIDO -3
 #define ERRO_FALHA_OBTER_BLOCO -4
 
-// Códigos dos Comandos do Protocolo
 #define CMD_OBTER_DADOS 1
 #define CMD_SALVAR_DADOS 2
 #define CMD_OBTER_BLOCO_INTERNO 3
@@ -33,6 +28,7 @@ typedef struct
     int id;
     char *dados;
 } BlocoMemoria;
+
 typedef struct
 {
     int id;
@@ -214,7 +210,6 @@ void *handle_connection(void *socket_desc)
 
         if (pos < 0 || (pos + tam) > (K_BLOCOS * T_BLOCO) || tam <= 0)
         {
-            // LOG ADICIONADO AQUI
             printf("[P%d] [ERRO] Pedido de leitura fora dos limites da memória. Enviando código %d.\n", my_rank, ERRO_MEMORIA_INEXISTENTE);
             uint32_t codigo_erro_net = htonl(ERRO_MEMORIA_INEXISTENTE);
             send(sock, &codigo_erro_net, sizeof(uint32_t), 0);

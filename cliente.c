@@ -1,6 +1,3 @@
-// cliente.c (Versão Final com Testes em Português e Logs Claros)
-// Compilar com: gcc cliente.c -o cliente
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,20 +13,16 @@
 
 typedef unsigned char byte;
 
-// Códigos de status e erro
 #define SUCESSO 0
 #define ERRO_MEMORIA_INEXISTENTE -2
 #define ERRO_COMANDO_DESCONHECIDO -3
 #define ERRO_FALHA_OBTER_BLOCO -4
 #define ERRO_CONEXAO -10
 
-// Códigos dos Comandos do Protocolo
 #define CMD_OBTER_DADOS 1
 #define CMD_SALVAR_DADOS 2
 
 int recv_all(int sock, char *buffer, int len);
-
-// --- Funções da API (le e escreve) ---
 
 int le(int posicao, byte *buffer, int tamanho)
 {
@@ -109,8 +102,6 @@ int escreve(int posicao, byte *buffer, int tamanho)
     return status;
 }
 
-// --- Funções de Teste ---
-
 void traduzir_erro(int codigo_erro)
 {
     printf("   -> Mensagem de Erro: ");
@@ -174,9 +165,9 @@ void teste_escrita_leitura_simples_local()
 void teste_escrita_leitura_multibloco_remoto()
 {
     printf("\n--- INICIANDO Teste 2: Escrita/Leitura em Múltiplos Blocos ---\n");
-    char *dados_escrita = "MEMORIA COMPARTILHADA"; // 22 caracteres
-    int pos = 4;                                   // Começa no bloco 0 (P0)
-    int tam = strlen(dados_escrita);               // Escreve até o bloco 3 (P1)
+    char *dados_escrita = "MEMORIA COMPARTILHADA";
+    int pos = 4;
+    int tam = strlen(dados_escrita);
     byte buffer_leitura[50] = {0};
 
     printf("2.1. Escrevendo o texto '%s' na posicao %d...\n", dados_escrita, pos);
@@ -234,7 +225,7 @@ void teste_invalidacao_cache()
 void teste_acesso_alem_limites()
 {
     printf("\n--- INICIANDO Teste 4: Acesso a Memória Fora dos Limites ---\n");
-    int memoria_total = 10 * 8; // K_BLOCOS * T_BLOCO do cenário
+    int memoria_total = 10 * 8;
     int pos = memoria_total + 5;
     byte buffer[10];
     printf("4.1. Tentando ler da posicao %d (que é inválida).\n", pos);
@@ -262,7 +253,7 @@ void teste_comando_invalido()
         return;
     }
 
-    uint32_t comando_invalido_net = htonl(99); // 99 não é um comando válido
+    uint32_t comando_invalido_net = htonl(99);
     printf("5.1. Enviando um código de comando inválido (99) para o servidor...\n");
     send(s, &comando_invalido_net, sizeof(uint32_t), 0);
 
@@ -273,7 +264,6 @@ void teste_comando_invalido()
     run_test("Comando Invalido", status, ERRO_COMANDO_DESCONHECIDO);
 }
 
-// --- Menu Principal ---
 int main(int argc, char *argv[])
 {
     int escolha = -1;
